@@ -74,14 +74,19 @@ describe('promise.clear', () => {
         assert.isTrue(await delayPromise);
     });
 
-    it('will reject if cleared with an error', async function() {
-        const delayPromise = delay.resolve(10000, true);
-        delayPromise.clear(new Error('cancelled'));
-        try {
-            await delayPromise;
-            assert.isTrue(false, 'should have rejected');
-        } catch(err) {
-            assert.equal(err.message, 'cancelled');
+    it('will reject appropriately', async function() {
+        const reasons = [0, false, null, undefined, new Error('cancelled'), 'string rejection', true, {some: 'object'}];
+        for (const reason of reasons) {
+            const delayPromise = delay.resolve(10000, 'resolved');
+            delayPromise.clear(reason);
+            try {
+                await delayPromise;
+                if (typeof reason !== 'undefined') {
+                    assert.isTrue(false, 'should have rejected');
+                }
+            } catch (rejectReason) {
+                assert.strictEqual(rejectReason, reason);
+            }
         }
     });
 });

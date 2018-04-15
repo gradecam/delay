@@ -31,6 +31,7 @@ delay(100, 'a result')
 ## Advanced usage
 
 ```ts
+import * as assert from 'assert';
 import { delay } from '@gradecam/delay';
 
 // With Node.js >=7.6 and async functions
@@ -51,16 +52,26 @@ delay.reject(100, 'foo'))
 		// err === 'foo'
 	});
 
-// You can cancel the promise by calling `.cancel()`
+// You can clear the delay by calling `.clear` on the returned promise
 (async () => {
+	const delayedPromise = delay.resolve(1000);
+	setTimeout(() => {
+		delayedPromise.clear();
+	}, 500);
+	await delayedPromise;
+})();
+
+// If you want to cancel (reject) the promise then call `.clear` with an argument other than `undefined`.
+(async () => {
+	const delayedPromise = delay.resolve(1000, 'Successfully delayed.');
+	setTimeout(() => {
+		delayedPromise.clear(new Error('cancelled'));
+	});
 	try {
-		const delayedPromise = delay(1000);
-		setTimeout(() => {
-			delayedPromise.cancel();
-		}, 500);
 		await delayedPromise;
+		assert.fail('should have rejected the promise.');
 	} catch (err) {
-		// `err` is an instance of `delay.CancelError`
+		assert.equal(err.message, 'cancelled');
 	}
 })();
 ```

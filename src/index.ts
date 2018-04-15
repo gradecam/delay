@@ -5,7 +5,7 @@
  * as if the `ms` had fully elapsed.
  */
 export interface DelayPromise<T> extends Promise<T> {
-    clear(err?: Error): void;
+    clear(reason?: any): void;
 }
 
 /**
@@ -26,11 +26,11 @@ const createDelay = (willResolve: boolean) =>
                 setImmediate(() => settle(value))
             ;
         });
-        (<any>delayPromise).clear = (err?: Error) => {
+        (<any>delayPromise).clear = (reason?: any) => {
             if (!ref) { return; }
             ms ? clearTimeout(ref) : clearImmediate(ref);
             ref = null;
-            err ? internalReject(err) : settle(value);
+            typeof reason !== 'undefined' ? internalReject(reason) : settle(value);
         };
         return <any>delayPromise;
     }
