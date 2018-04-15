@@ -1,6 +1,6 @@
 {
   "name": "@gradecam/delay",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Delay specified amount of time then resolve/reject promise.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
