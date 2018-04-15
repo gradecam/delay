@@ -35,5 +35,9 @@
     "ts-node": "~5.0.1",
     "tslint": "~5.9.1",
     "typescript": "~2.8.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/gradecam/delay.git"
   }
 }
